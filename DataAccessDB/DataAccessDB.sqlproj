@@ -60,11 +60,11 @@
     <Folder Include="storedprocedures\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="tables\People.sql" />
     <Build Include="storedprocedures\spPeople_GetAll.sql" />
     <Build Include="storedprocedures\spPeople_Insert.sql" />
     <Build Include="storedprocedures\spPeople_Update.sql" />
     <Build Include="storedprocedures\spPeople_Delete.sql" />
+    <Build Include="tables\People.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="DataAccessDB.publish.xml" />

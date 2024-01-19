@@ -1,0 +1,68 @@
+﻿@rendermode InteractiveServer
+@inject IPeopleData sql
+
+<h3>Delete</h3>
+
+@if (people == null)
+{
+    <p>Loading ...</p>
+}
+else
+{
+    <EditForm Enhance Model="selected" method="post" FormName="deletePersonForm" OnValidSubmit="DeletePerson">
+        <InputSelect @bind-Value="selected.Id" class="form-control">
+            @foreach (var p in people)
+            {
+                <option value="@p.Id">@p.FirstName @p.LastName</option>
+            }
+        </InputSelect>
+
+        <button class="btn btn-outline-danger mb-3 my-3" type="submit">Delete Person</button>
+    </EditForm>
+}
+
+@code {
+    private IEnumerable<PersonModel>? people;
+    private PersonModel? personToUpdate;
+    private SelectedPersonModel selected = new();
+    private class SelectedPersonModel
+    {
+        public int Id { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    private async Task RefreshData()
+    {
+        people = null;
+        people = await sql.GetAllPeople();
+    }
+
+    private async void LoadPerson()
+    {
+        PersonModel foundPerson = people.Where(p => p.Id == selected.Id).FirstOrDefault();
+
+        if (foundPerson != null)
+        {
+            personToUpdate = new();
+            personToUpdate.Id = foundPerson.Id;
+            personToUpdate.FirstName = foundPerson.FirstName;
+            personToUpdate.LastName = foundPerson.LastName;
+        }
+        else
+        {
+            personToUpdate = null;
+        }
+        await DeletePerson();
+    }
+    private async Task DeletePerson()
+    {
+        await sql.DeletePerson(selected.Id);
+        personToUpdate = null;
+        selected.Id = 0;
+        await RefreshData();
+    }
+}

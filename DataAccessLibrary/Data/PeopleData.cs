@@ -31,7 +31,7 @@ public class PeopleData : IPeopleData
     public async Task InsertPerson(PersonModel person)
     {
         await _sql.SaveDataAsync("dbo.spPeople_Insert",
-            new { person.FirstName, person.LastName});
+            new { person.FirstName, person.LastName });
     }
 
     public async Task DeletePerson(int id)
