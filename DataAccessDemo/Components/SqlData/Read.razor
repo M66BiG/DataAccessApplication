@@ -1,0 +1,37 @@
+﻿@rendermode InteractiveServer
+@inject IPeopleData sql
+
+<h3 class="mb-3">Read</h3>
+
+@if (people == null)
+{
+    <p>Daten werden derzeit noch geladen...</p>
+}
+else
+{
+    <ul>
+        @foreach (PersonModel p in people)
+        {
+            <li>
+                @p.Id @p.FirstName @p.LastName
+            </li>
+        }
+    </ul>
+
+    <button class="btn btn-primary my-3" @onclick="RefreshData" type="button">Refresh Data</button>
+}
+
+@code {
+    private IEnumerable<PersonModel>? people;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    private async Task RefreshData()
+    {
+        people = null;
+        people = await sql.GetAllPeople();
+    }
+}
