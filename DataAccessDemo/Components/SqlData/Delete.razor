@@ -23,7 +23,6 @@ else
 
 @code {
     private IEnumerable<PersonModel>? people;
-    private PersonModel? personToUpdate;
     private SelectedPersonModel selected = new();
     private class SelectedPersonModel
     {
@@ -41,27 +40,9 @@ else
         people = await sql.GetAllPeople();
     }
 
-    private async void LoadPerson()
-    {
-        PersonModel foundPerson = people.Where(p => p.Id == selected.Id).FirstOrDefault();
-
-        if (foundPerson != null)
-        {
-            personToUpdate = new();
-            personToUpdate.Id = foundPerson.Id;
-            personToUpdate.FirstName = foundPerson.FirstName;
-            personToUpdate.LastName = foundPerson.LastName;
-        }
-        else
-        {
-            personToUpdate = null;
-        }
-        await DeletePerson();
-    }
     private async Task DeletePerson()
     {
         await sql.DeletePerson(selected.Id);
-        personToUpdate = null;
         selected.Id = 0;
         await RefreshData();
     }
