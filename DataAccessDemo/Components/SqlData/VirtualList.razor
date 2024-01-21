@@ -1,0 +1,52 @@
+﻿@page "/virtuallist"
+@rendermode InteractiveServer
+
+
+
+<h3>Virtual List</h3>
+
+
+@* @foreach (PersonModel p in people)
+{
+    <p style="font-size: 26px;">@p.FirstName @p.LastName</p> <br/>
+} *@
+
+@* <Virtualize Items="people" Context="p">
+    <ItemContent>
+        <p style="font-size: 26px;">@p.FirstName @p.LastName</p>
+    </ItemContent>
+    <EmptyContent>
+        <p style="font-size: 26px;">No Elements found</p>
+    </EmptyContent>
+</Virtualize> *@
+
+<table class="table table-striped" style="font-size: 26px;">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        <Virtualize Context="p" Items="people" SpacerElement="tr" OverscanCount="3"> @*foreach p in people und statt divs zu createn nutzt er tr durch spacerelements und overscancount rendert drüber | standard = 3*@
+            <tr>
+                <td>@p.FirstName</td>
+                <td>@p.LastName</td>
+            </tr>
+        </Virtualize>
+    </tbody>
+</table>
+
+@code {
+    private List<PersonModel> people = new();
+
+    protected override void OnInitialized()
+    {
+        for(int i = 0; i < 500; i++)
+        {
+            people.Add(new() { FirstName = $"First {i}", LastName = $"Last {i}"});
+        }
+        
+    }
+
+}
